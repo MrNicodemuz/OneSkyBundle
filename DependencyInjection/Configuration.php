@@ -15,8 +15,15 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('openclassrooms_onesky');
+        $treeBuilder = new TreeBuilder('openclassrooms_onesky');
+        
+        // Keep compatibility with symfony/config < 4.2
+        if (\method_exists($treeBuilder, 'getRootNode')) {
+            $rootNode = $treeBuilder->getRootNode();
+        } else {
+            $rootNode = $treeBuilder->root('openclassrooms_onesky');
+        }
+
         $rootNode->children()
             ->scalarNode('api_key')->isRequired()->cannotBeEmpty()->end()
             ->scalarNode('api_secret')->isRequired()->cannotBeEmpty()->end()
